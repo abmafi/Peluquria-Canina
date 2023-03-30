@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Picture</title>
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+        
+
+    <header>
+        <section>
+            <figure>
+                <span>Rock & Dog</span>
+            </figure>
+            <nav>
+                <ul>
+                    <li><a href="index.php">Home</a></li>
+                    <li><a href="fotografia.php">Servicios</a></li>
+                    <li><a href="galeria.php">Articulos</a></li>
+                    <li><a href="contacto.php">Horario</a></li>
+                    <li><a href="Login.php">Contacto</a></li>
+                </ul>
+            </nav>
+        </section>
+    </header>    
+
+    <main>
+    
+    
+        <div class="app-container-dom">
+            <div class="app-text-center app-text-white">
+                <h1 class="app-nom-dom">Home</h1>
+            </div>
+        </div><br><br>        
+        <section>
+            <div class="app-contenedor" style="text-align: center;">
+                    <div class="app-producto-b">
+                        <div class="contenedor">
+                            <div class="app-img">  
+                            <img src="img1.jpg">
+                            </div><br>
+                            <div class="app-descripcion">
+                                <h3><b>Servicio 1</b></h3>
+                                <h4>Tenga un mejor aspecto</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-producto-b">
+                        <div class="contenedor">
+                            <div class="app-img">  
+                            <img src="img2.jpg">
+                            </div><br>
+                            <div class="app-descripcion">
+                                <h3><b>Servicio 2</b></h3>
+                                <h4>Nosotros hacemos que se sienta un cliente unico</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-producto-b">
+                        <div class="contenedor">
+                            <div class="app-img">  
+                            <img src="img3.jpg">
+                            </div><br>
+                            <div class="app-descripcion">
+                                <h3><b>Servicio 3</b></h3>
+                                <h4>No te quedes sin tu prenda</h4>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </section>
+    </main>
+    
+    
+    <footer>
+        <section class="app-footer">
+            <div class="Desarrollo">
+                <p>Derechos Reservados</p> 
+                <p>2023</p>
+            </div>
+        </section>
+    </footer>
+</body>
+</html>
+
+<script src="assets/js/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript">
+    listarproducto();
+
+    function listarproducto(){
+        $.ajax({
+            url:'Panel/motocicleta/listar_fotografia.php',
+            type: 'GET',
+            success: function (response){
+                let cat = JSON.parse(response);
+                let template = '';
+                cat.forEach(prod=>{
+                    template += '<div class="app-producto-b">'+
+                                    '<div class="contenedor">'+
+                                        '<div class="app-img">  '+ 
+                                        '<img src="imagenes/'+prod.imagen+'">'+
+                                        '</div><br>'+
+                                        '<div class="app-descripcion">'+
+                                            '<h3><b>'+prod.nombre+'</b></h3>'+
+                                            '<h5>'+prod.descri+'</h5>'+
+                                            '<h5><b>Bs.</b> '+prod.costou+'</h5>'+
+                                        '</div>'+
+
+                                        '<a id="app-agregar" class="btn-primary" data-id='+prod.id_fotografia+' href="#">Adquirir</a>'+
+                                    '</div><br>'+
+                                '</div>';
+                });
+                $('#app-container').html(template);
+                $('#app-container1').html(template);
+            }
+        });
+    }
+
+    let productos = [];
+    let items = {
+        id: 0
+    }
+    mostrar();
+
+    function ticketran(){
+        return Math.floor(Math.random()*999999);
+    }
+
+
+    $(document).on('click','#app-agregar', function(e){    
+        e.preventDefault();
+        $ticket = ticketran();
+        const id = $(this).data('id');
+        $sumticket=id+$ticket;
+        console.log($sumticket);
+        items = {
+            id: id,
+            ticket:$sumticket,
+        }
+        productos.push(items);
+        localStorage.setItem('productos', JSON.stringify(productos));
+        mostrar();
+    })
+
+    $('#btnCarrito').click(function(e){
+        $('#numticket').css('display','block');
+        $('#btnCarrito').attr('href','pedido.php');
+    })
+
+    function mostrar(){
+        if (localStorage.getItem("productos") != null) {
+            let array = JSON.parse(localStorage.getItem('productos'));
+            if (array) {
+                $('#carrito').text(array.length);
+            }
+        }
+    }
+
+</script>
